@@ -11,43 +11,43 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rockers.api.dao.UserDao;
 import com.rockers.api.model.User;
+import com.rockers.api.repository.UserRepository;
 
 @RestController
 @RequestMapping(value="/user")
 public class UserController {
 
 	@Autowired
-	private UserDao dao;
+	private UserRepository userRepository;
 	
 	@RequestMapping(method= RequestMethod.POST)
-	public ResponseEntity<String> saveUser(@RequestBody User user){
-		String id = dao.save(user);
-		return new ResponseEntity<String>(id, HttpStatus.OK);
+	public ResponseEntity<Long> saveUser(@RequestBody User user){
+		userRepository.save(user);
+		return new ResponseEntity<Long>(user.getId(), HttpStatus.OK);
 	}
 	
 	@RequestMapping(method= RequestMethod.GET, value="/{id}")
-	public ResponseEntity<User> findOne(@PathVariable String id){
-		User user = dao.findOne(id);
+	public ResponseEntity<User> findOne(@PathVariable Long id){
+		User user = userRepository.findOne(id);
 		return new ResponseEntity<User>(user, HttpStatus.OK);
 	}
 	
 	@RequestMapping(method= RequestMethod.DELETE)
-	public void Delete(@PathVariable String id){
-		dao.delete(id);
+	public void Delete(@PathVariable Long id){
+		userRepository.delete(id);
 	}
 	
 	@RequestMapping(method= RequestMethod.GET)
 	public ResponseEntity<List<User>> listAll()  {
-		List<User> user = dao.listAll();
+		List<User> user = userRepository.findAll();
 		return new ResponseEntity<List<User>>(user, HttpStatus.OK);
 	}
 	
 	@RequestMapping(method= RequestMethod.PUT)
-	public ResponseEntity<String> updateUser(@RequestBody User user){
-		String id = dao.save(user);
-		return new ResponseEntity<String>(id, HttpStatus.OK);
+	public ResponseEntity<Long> updateUser(@RequestBody User user){
+		userRepository.save(user);
+		return new ResponseEntity<Long>(user.getId(), HttpStatus.OK);
 	}
 	
 }

@@ -11,43 +11,44 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rockers.api.dao.ContractDao;
+
 import com.rockers.api.model.Contract;
+import com.rockers.api.repository.ContractRepository;
 
 @RestController
 @RequestMapping(value="/contract")
 public class ContractController {
 
 	@Autowired
-	private ContractDao dao;
+	private ContractRepository contractRepository;
 	
 	
 	@RequestMapping(method= RequestMethod.POST)
-	public ResponseEntity<String> saveContract(@RequestBody Contract contract){
-		String id = dao.save(contract);
-		return new ResponseEntity<String>(id, HttpStatus.OK);
+	public ResponseEntity<Long> saveContract(@RequestBody Contract contract){
+	    contractRepository.save(contract);
+		return new ResponseEntity<Long>(contract.getId(), HttpStatus.OK);
 	}
 	
 	@RequestMapping(method= RequestMethod.GET, value="/{id}")
-	public ResponseEntity<Contract> findOne(@PathVariable String id){
-		Contract contract = dao.findOne(id);
+	public ResponseEntity<Contract> findOne(@PathVariable Long id){
+		Contract contract = contractRepository.findOne(id);
 		return new ResponseEntity<Contract>(contract, HttpStatus.OK);
 	}
 	
 	@RequestMapping(method= RequestMethod.DELETE)
-	public void Delete(@PathVariable String id){
-		dao.delete(id);
+	public void Delete(@PathVariable Long id){
+		contractRepository.delete(id);
 	}
 	
-	@RequestMapping(method= RequestMethod.GET)
+	@RequestMapping(method= RequestMethod.GET, value="/listAll")
 	public ResponseEntity<List<Contract>> listAll()  {
-		List<Contract> contract = dao.listAll();
+		List<Contract> contract = contractRepository.findAll();
 		return new ResponseEntity<List<Contract>>(contract, HttpStatus.OK);
 	}
 	
 	@RequestMapping(method= RequestMethod.PUT)
-	public ResponseEntity<String> updateContract(@RequestBody Contract contract){
-		String id = dao.save(contract);
-		return new ResponseEntity<String>(id, HttpStatus.OK);
+	public ResponseEntity<Long> updateContract(@RequestBody Contract contract){
+		contractRepository.save(contract);
+		return new ResponseEntity<Long>(contract.getId(), HttpStatus.OK);
 	}
 }

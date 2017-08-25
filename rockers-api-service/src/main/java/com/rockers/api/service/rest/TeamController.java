@@ -11,42 +11,42 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.rockers.api.dao.TeamDao;
 import com.rockers.api.model.Team;
+import com.rockers.api.repository.TeamRepository;
 
 @RestController
 @RequestMapping(value="/team")
 public class TeamController {
 
 	@Autowired
-	private TeamDao dao;
+	private TeamRepository teamRepository;
 	
 	@RequestMapping(method= RequestMethod.POST)
-	public ResponseEntity<String> saveTeam(@RequestBody Team team){
-		String name = dao.save(team);
-		return new ResponseEntity<String>(name, HttpStatus.OK);
+	public ResponseEntity<Long> saveTeam(@RequestBody Team team){
+		teamRepository.save(team);
+		return new ResponseEntity<Long>(team.getId(), HttpStatus.OK);
 	}
 	
 	@RequestMapping(method= RequestMethod.GET, value="/{name}")
-	public ResponseEntity<Team> findOne(@PathVariable String name){
-		Team team = dao.findOne(name);
+	public ResponseEntity<Team> findOne(@PathVariable Long name){
+		Team team = teamRepository.findOne(name);
 		return new ResponseEntity<Team>(team, HttpStatus.OK);
 	}
 	
 	@RequestMapping(method= RequestMethod.DELETE)
-	public void Delete(@PathVariable String id){
-		dao.delete(id);
+	public void Delete(@PathVariable Long id){
+		teamRepository.delete(id);
 	}
 	
 	@RequestMapping(method= RequestMethod.GET)
 	public ResponseEntity<List<Team>> listAll()  {
-		List<Team> team = dao.listAll();
+		List<Team> team = teamRepository.findAll();
 		return new ResponseEntity<List<Team>>(team, HttpStatus.OK);
 	}
 	
 	@RequestMapping(method= RequestMethod.PUT)
-	public ResponseEntity<String> updateTeam(@RequestBody Team team){
-		String id = dao.save(team);
-		return new ResponseEntity<String>(id, HttpStatus.OK);
+	public ResponseEntity<Long> updateTeam(@RequestBody Team team){
+		teamRepository.save(team);
+		return new ResponseEntity<Long>(team.getId(), HttpStatus.OK);
 	}
 }

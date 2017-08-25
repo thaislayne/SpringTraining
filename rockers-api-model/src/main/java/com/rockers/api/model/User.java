@@ -1,16 +1,21 @@
 package com.rockers.api.model;
 
-import java.util.HashSet;
-import java.util.Set;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.OneToOne;
 
 import lombok.Data;
 
 @Data
-public class User {
-	private Employee employee;
-	private String wiproId;
-	private String wiproEmail;
+@Entity
+public class User extends BaseEntity{
+	@Column(name ="login", nullable = false)
+	private String login;
+	
+	@Column(name ="password", nullable = false)
 	private String password;
-	private String Id;
-	private Set<Employee> employees = new HashSet<Employee>(); 
+	
+	@OneToOne(fetch = FetchType.LAZY)
+	private Employee employee;
 }
